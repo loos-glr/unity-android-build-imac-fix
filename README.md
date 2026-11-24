@@ -2,7 +2,7 @@
 
 Op de iMacs kun je in Unity Hub geen **Android Build Support** toevoegen, omdat je daarvoor admin-rechten nodig hebt. Dit script lost dat op zonder admin:
 
-1. Het kopieert de Unity Editor (`6000.0.77f1`) naar je eigen map: `~/UnityEditors/6000.0.77f1`.
+1. Het kopieert de Unity Editor uit `/Applications/Unity/Unity.app` (nu `6000.0.77f1`) naar je eigen map: `~/UnityEditors/6000.0.77f1`. De versie leest het script zelf uit.
 2. Het stelt Unity Hub zo in dat de Hub die kopie gebruikt.
 3. Het installeert Android Build Support, de Android SDK & NDK en OpenJDK in die kopie.
 
@@ -24,7 +24,7 @@ Je hoeft dit maar één keer per account te doen. Als je het opnieuw draait, sla
 
 ## Andere Unity-versie
 
-Gebruikt je project een andere versie die op de iMac staat? Zet die versie achter het commando:
+Het script gebruikt standaard de Unity in `/Applications/Unity/Unity.app`. Staat er ook een versie in `/Applications/Unity/Hub/Editor` die je wilt gebruiken? Zet die versie achter het commando:
 
 ```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/loos-glr/unity-android-build-imac-fix/main/fix_unity_android.command)" _ 6000.0.77f1
@@ -52,4 +52,4 @@ Alles weer verwijderen: verwijder de map `~/UnityEditors`.
 - Het script heeft geen admin-rechten nodig en verandert niets in `/Applications`.
 - Elke student krijgt een eigen kopie van de editor, inclusief Android, van ongeveer 10 tot 15 GB. Houd daar rekening mee bij quota op thuismappen.
 - Het script zet de installatiemap van Unity Hub voor die gebruiker op `~/UnityEditors`.
-- De standaardversie pas je aan in `UNITY_VERSION`, bovenaan [`fix_unity_android.command`](fix_unity_android.command).
+- Het script kopieert `/Applications/Unity/Unity.app` en de mappen ernaast (behalve `Hub`). Het leest de versie uit de `Info.plist` van de app. Wordt Unity bijgewerkt, dan pakt het script de nieuwe versie vanzelf.
