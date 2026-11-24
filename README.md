@@ -3,8 +3,8 @@
 Op de iMacs kun je in Unity Hub geen **Android Build Support** toevoegen, omdat je daarvoor admin-rechten nodig hebt. Dit script lost dat op zonder admin:
 
 1. Het kopieert de Unity Editor uit `/Applications/Unity/Unity.app` (nu `6000.0.77f1`) naar je eigen map: `~/UnityEditors/6000.0.77f1`. De versie leest het script zelf uit.
-2. Het stelt Unity Hub zo in dat de Hub die kopie gebruikt.
-3. Het installeert Android Build Support, de Android SDK & NDK en OpenJDK in die kopie.
+2. Het downloadt Android Build Support, de Android SDK & NDK en OpenJDK rechtstreeks bij Unity en Google, en installeert ze in die kopie. Unity Hub kan dat zelf niet, omdat de editor niet via de Hub is geïnstalleerd.
+3. Het stelt Unity Hub zo in dat de Hub de kopie vindt.
 
 ## Snel starten (één commando)
 
@@ -41,15 +41,18 @@ Download [`fix_unity_android.command`](fix_unity_android.command) en dubbelklik 
 | Melding | Oplossing |
 |---|---|
 | `Kan Unity ... niet vinden` | Deze versie staat niet op deze iMac. Kies een versie uit de lijst die het script toont. |
-| `Te weinig schijfruimte` | Je hebt ongeveer 15 GB vrij nodig in je thuismap. Verwijder oude projecten of builds. |
-| `Android onderdelen ontbreken` | De download is mislukt, bijvoorbeeld door het netwerk. Draai het commando opnieuw. |
+| `Te weinig schijfruimte` | Je hebt ongeveer 20 GB vrij nodig in je thuismap. Verwijder oude projecten of builds. |
+| `Installeren van ... mislukt` of `Android onderdelen ontbreken` | Een download is mislukt, bijvoorbeeld door het netwerk. Draai het commando opnieuw; het script gaat verder waar het gebleven was. |
+| `Kan de module-lijst niet ophalen` | Geen verbinding met Unity. Controleer of je internet hebt en probeer het opnieuw. |
 | Editor staat niet in Unity Hub | Kies in Unity Hub **Installs → Locate** en selecteer `~/UnityEditors/<versie>/Unity.app`. |
 
-Alles weer verwijderen: verwijder de map `~/UnityEditors`.
+Alles weer verwijderen: verwijder de map `~/UnityEditors`. Daar staan ook de tijdelijke downloads, in `~/UnityEditors/.downloads`.
 
 ## Voor docenten / beheer
 
 - Het script heeft geen admin-rechten nodig en verandert niets in `/Applications`.
-- Elke student krijgt een eigen kopie van de editor, inclusief Android, van ongeveer 10 tot 15 GB. Houd daar rekening mee bij quota op thuismappen.
-- Het script zet de installatiemap van Unity Hub voor die gebruiker op `~/UnityEditors`.
+- Elke student krijgt een eigen kopie van de editor, inclusief Android, van ongeveer 20 GB. Houd daar rekening mee bij quota op thuismappen.
+- Het script gebruikt de Unity Hub niet voor de installatie. Het haalt de module-lijst op via Unity's release-API (`services.api.unity.com`), dezelfde gegevens die de Hub gebruikt. Daarna downloadt het elk onderdeel (pkg, zip of dmg) en pakt het uit in `PlaybackEngines/AndroidPlayer`. Dat gebeurt zonder admin en met alleen standaard macOS-tools, dus geen Python of Xcode nodig.
+- Per geïnstalleerd onderdeel komt er een markering in `~/UnityEditors/<versie>/.android-modules`. Wordt het script opnieuw gedraaid, dan slaat het die onderdelen over.
+- Het script zet de installatiemap van Unity Hub voor die gebruiker op `~/UnityEditors`, zodat de editor in de Hub verschijnt.
 - Het script kopieert `/Applications/Unity/Unity.app` en de mappen ernaast (behalve `Hub`). Het leest de versie uit de `Info.plist` van de app. Wordt Unity bijgewerkt, dan pakt het script de nieuwe versie vanzelf.
