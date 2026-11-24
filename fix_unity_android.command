@@ -2,6 +2,8 @@
 
 # Unity versie op de iMacs. Kan ook als eerste argument worden meegegeven:
 #   ./fix_unity_android.command 6000.0.77f1
+# Of direct vanaf GitHub (zie README.md):
+#   bash -c "$(curl -fsSL https://raw.githubusercontent.com/loos-glr/unity-android-build-imac-fix/main/fix_unity_android.command)"
 UNITY_VERSION="${1:-6000.0.77f1}"
 
 EDITOR_ROOT="/Applications/Unity/Hub/Editor"
@@ -15,8 +17,11 @@ EXTRA_SPACE_KB=$((6 * 1024 * 1024))
 fail() {
     echo ""
     echo "FOUT: $1"
-    echo "Druk op Enter om af te sluiten."
-    read -r _
+    # Alleen wachten als er een echte terminal is (niet bij 'curl | bash')
+    if [ -t 0 ]; then
+        echo "Druk op Enter om af te sluiten."
+        read -r _
+    fi
     exit 1
 }
 
